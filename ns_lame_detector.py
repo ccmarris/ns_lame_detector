@@ -53,14 +53,13 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'Chris Marrison'
 
 import logging
 import argparse
 import dns.resolver
 import dns.rcode
-from rich import print
 
 _logger = logging.getLogger(__name__)
 ### Global Variables ###
@@ -121,8 +120,23 @@ class LAME():
         self.ns_from_parent:set = set()
         self.auth_ns:set = set()
         self.nameservers:set = set()
-        self.results:list
+        self.results:list = []
+        self.bulk_results:list = []
         self.timeout:float = timeout
+
+        return
+    
+
+    def reset(self):
+        '''
+        Reset properties
+        Properties should be reset before performing tests on 
+        different domains
+        '''
+        self.ns_from_parent:set = set()
+        self.auth_ns:set = set()
+        self.nameservers:set = set()
+        self.results:list
 
         return
     
@@ -142,8 +156,12 @@ class LAME():
                     unknown = True
 
         print()
+        print(f'Results for the domain: {self.results[0].get('zone')}')
+        print()
         if lame:
             print('LAME DELEGATIONS DETECTED')
+            print('You may be a Sitting Duck:')
+            print('https://blogs.infoblox.com/threat-intelligence/who-knew-domain-hijacking-is-so-easy/')
             print()
         if unknown:
             print('Could not determine status of all servers')
@@ -231,11 +249,32 @@ class LAME():
         else:
             status = 'LAME DELEGATION'
         
-        result = { 'nameserver': server,
+        result = { 'zone': zone,
+                   'nameserver': server,
                    'status': status }
 
         return result
             
+    
+    def bulk_lame_check(self, domains:list = []):
+        '''
+        Check a list of domains and report
+
+        Parameters:
+            domains:list = List of domains to check
+        
+        Returns:
+            Updates the self.bulk_results list
+        
+        '''
+        for domain in domains:
+            self.reset()
+            self.full_lame_check(zone=domain)
+            self.report()
+            self.bulk_results.append(self.results)
+        
+        return
+
 
     def dns_query(self, query:str ='', qtype:str ='A', nameserver:str=None):
         '''
