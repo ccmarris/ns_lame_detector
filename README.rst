@@ -13,8 +13,10 @@ A python class to assist with detecting lame delegations for DNS domains.
 The class can be used within your own scripts or the script can be run 
 directly from the command line.
 
-Demonstration code is included that enables this to be used as a simple 
-script.
+This was inspired by Infoblox Threat Intel and Eclypsium who published 
+information on the Sitting Ducks attack:
+
+https://blogs.infoblox.com/threat-intelligence/who-knew-domain-hijacking-is-so-easy/
 
 
 Prerequisites
