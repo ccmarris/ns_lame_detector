@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ns_lame_detector"
+dynamic = ["version"]
+description = "DNS Lame Server Detection"
+readme = "README.rst"
+license = "BSD-2-Clause"
+requires-python = ">=3.8"
+authors = [
+    { name = "Chris Marrison", email = "chris@infoblox.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "dnspython"
+]
+
+[project.urls]
+Documentation = "https://github.com/ccmarris/ns_lame_detector"
+Homepage = "https://github.com/ccmarris/ns_lame_detector"
+Source = "https://github.com/ccmarris/ns_lame_detector"
+Tracker = "https://github.com/ccmarris/ns_lame_detector/issues"
+
+[tool.hatch.version]
+path = "ns_lame_detector/__init__.py"
+
+[tool.setuptools.packages.find]
+where = [""]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/ns_lame_detector",
+]

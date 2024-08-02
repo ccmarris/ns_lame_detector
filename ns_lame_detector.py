@@ -82,8 +82,6 @@ def parseargs():
     parse = argparse.ArgumentParser(description=description)
     parse.add_argument('-z', '--zone', type=str, default='all',
                        help='Zone to perform checks against')
-    parse.add_argument('-f', '--file', action='store_true',
-                        help='Output CSVs to file')
     parse.add_argument('-d', '--debug', action='store_true', 
                         help="Enable debug messages")
 
