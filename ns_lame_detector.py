@@ -53,10 +53,9 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.0.5'
+__version__ = '0.1.0'
 __author__ = 'Chris Marrison'
 
-import utils
 import logging
 import argparse
 import dns.resolver
