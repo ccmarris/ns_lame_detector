@@ -1,0 +1,9 @@
+zone,nameserver,status
+infoblox.com,ns5.infoblox.com.,AUTHORITATIVE
+infoblox.com,ns1.infoblox.com.,AUTHORITATIVE
+infoblox.com,ns6.infoblox.com.,AUTHORITATIVE
+infoblox.com,ns7.infoblox.com.,AUTHORITATIVE
+google.com,ns4.google.com.,AUTHORITATIVE
+google.com,ns2.google.com.,AUTHORITATIVE
+google.com,ns3.google.com.,AUTHORITATIVE
+google.com,ns1.google.com.,AUTHORITATIVE

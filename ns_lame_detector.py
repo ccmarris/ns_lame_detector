@@ -20,9 +20,6 @@
  Author: Chris Marrison
  Email: chris@infoblox.com
 
- ChangeLog:
-   <date>	<version>	<comment>
-
  Todo:
 
  Copyright 2024 Chris Marrison / Infoblox Inc
@@ -53,11 +50,13 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.1.1'
+__version__ = '0.1.3'
 __author__ = 'Chris Marrison'
 
 import logging
 import argparse
+import sys
+import csv
 import dns.resolver
 import dns.rcode
 
@@ -80,8 +79,12 @@ def parseargs():
     '''
     description = 'DNS Lame Server Check'
     parse = argparse.ArgumentParser(description=description)
-    parse.add_argument('-z', '--zone', type=str, default='all',
+    parse.add_argument('-z', '--zone', type=str, 
                        help='Zone to perform checks against')
+    parse.add_argument('-b', '--bulk', type=str, default='domains',
+                       help='Input filename for bulk operations')
+    parse.add_argument('-o', '--out', type=str, default=None,
+                       help='Output filename for bulk operations')
     parse.add_argument('-d', '--debug', action='store_true', 
                         help="Enable debug messages")
 
@@ -266,13 +269,34 @@ class LAME():
         
         '''
         for domain in domains:
+            _logger.info(f'Checking {domain} domain')
             self.reset()
             self.full_lame_check(zone=domain)
-            self.report()
             self.bulk_results.append(self.results)
         
         return
 
+
+    def bulk_report(self,out=None):
+        '''
+        Output Bulk report
+        
+        Parameters:
+            out:FileHandler = output file
+        '''
+        if out:
+            outfile = open(out, 'w', newline='')
+        else:
+            outfile = sys.stdout
+        
+        csvkeys = ['zone','nameserver','status']
+
+        csvfile = csv.DictWriter(outfile, csvkeys)
+        csvfile.writeheader()
+        for domain in self.bulk_results:
+            csvfile.writerows(domain)
+
+        return
 
     def dns_query(self, query:str ='', qtype:str ='A', nameserver:str=None):
         '''
@@ -434,10 +458,20 @@ def main():
     # Parse Arguments
     args = parseargs()
     setup_logging(args.debug)
+    domains:list = []
 
     lame = LAME()
-    lame.full_lame_check(zone=args.zone)
-    lame.report()
+    if args.zone:
+        lame.full_lame_check(zone=args.zone)
+        lame.report()
+    elif args.bulk:
+        with open(args.bulk, 'r') as infile:
+            for line in infile:
+                domains.append(line.rstrip())
+            print(f'Read: {domains}')
+            if domains:
+                lame.bulk_lame_check(domains=domains)
+                lame.bulk_report(args.out)
 
     return
 
