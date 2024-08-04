@@ -73,6 +73,8 @@ Complete list of modules::
 
   import logging
   import argparse
+  import sys
+  import csv
   import dns.resolver
   import dns.rcode
 
