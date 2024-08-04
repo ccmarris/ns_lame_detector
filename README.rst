@@ -125,6 +125,29 @@ Simple examples show below::
   ns7.infoblox.com.: AUTHORITATIVE
 
 
+Bulk check to STDOUT::
+
+  % ./ns_lame_detector.py --bulk domains
+  2024-08-04 08:47:10,536 INFO: Checking infoblox.com domain
+  2024-08-04 08:47:11,530 INFO: Checking google.com domain
+  zone,nameserver,status
+  infoblox.com,ns5.infoblox.com.,AUTHORITATIVE
+  infoblox.com,ns6.infoblox.com.,AUTHORITATIVE
+  infoblox.com,ns7.infoblox.com.,AUTHORITATIVE
+  infoblox.com,ns1.infoblox.com.,AUTHORITATIVE
+  google.com,ns3.google.com.,AUTHORITATIVE
+  google.com,ns2.google.com.,AUTHORITATIVE
+  google.com,ns4.google.com.,AUTHORITATIVE
+  google.com,ns1.google.com.,AUTHORITATIVE
+
+Bulk check to CSV file::
+
+  % ./ns_lame_detector.py --bulk domains --out bulk_report.csv
+  2024-08-04 08:47:10,536 INFO: Checking infoblox.com domain
+  2024-08-04 08:47:11,530 INFO: Checking google.com domain
+  2024-08-04 08:47:11,540 INFO: Bulk check complete
+
+
 License
 -------
 

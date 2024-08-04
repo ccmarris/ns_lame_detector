@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -273,6 +273,7 @@ class LAME():
             self.reset()
             self.full_lame_check(zone=domain)
             self.bulk_results.append(self.results)
+        _logger.info('Bulk check complete')
         
         return
 
