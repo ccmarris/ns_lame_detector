@@ -50,13 +50,16 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.1.4'
+__version__ = '0.2.0'
 __author__ = 'Chris Marrison'
 
 import logging
 import argparse
 import sys
 import csv
+import dns.inet
+import dns.message
+import dns.query
 import dns.resolver
 import dns.rcode
 
@@ -230,7 +233,7 @@ class LAME():
         status:str
         result:dict = {}
 
-        qr = self.dns_query(query=zone, qtype='NS', nameserver=server)
+        qr = self.iterative_dns_query(query=zone, qtype='NS', nameserver=server)
         _logger.debug(f'Server check query: {qr}')
 
         if qr.get('status') == 'NOERROR':
@@ -299,6 +302,72 @@ class LAME():
 
         return
 
+
+    def iterative_dns_query(self, 
+                            query:str ='', 
+                            qtype:str ='A', 
+                            nameserver:str='a.root-servers.net.'):
+        '''
+        Perform an iteractive DNS query
+
+        Parameters:
+            query:str = fqdn
+            qtype:str = record type, defaults to A records
+            nameserver:str = Send query to specific nameserver
+        
+        Returns:
+            dict: { 'status': dns.rcode.to_text(answers.response.rcode()),
+                    'rdtype': qtype,
+                    'rrset': rrset,
+                    'flags': answers.response.flags.name,
+                    'authority': authority }
+            
+        '''
+        rrset = []
+        authority = []
+        response:dict = {}
+        try: 
+            if not dns.inet.is_address(nameserver):
+                res = self.dns_query(query=nameserver,
+                               qtype='A')
+                nameserver = res.get('rrset').pop()
+            # Build iterative query message
+            msg = dns.message.make_query(qname=query,
+                                         rdtype=qtype,
+                                         flags=0)
+            res = dns.query.udp(msg, nameserver)
+
+            if res.answer:
+                for rdata in res.answer[0].to_rdataset():
+                    rrset.append(str(rdata))
+                    _logger.debug(f'{rdata}')
+            
+            # Isolate authority NS in response
+            if res.authority:
+                auth = str(res.authority).split('[')[2].split(']')[0]
+                auth =auth.replace('<','').replace('>','').replace(' ','')
+                authority = auth.split(',')
+            
+            response = { 'status': dns.rcode.to_text(res.rcode()),
+                            'rdtype': qtype,
+                            'rrset': rrset,
+                            'flags': res.flags.name,
+                            'authority': authority }
+
+        except dns.resolver.NXDOMAIN:
+            response = { 'status': 'NXDOMAIN' }
+        except dns.resolver.YXDOMAIN:
+            response = { 'status': 'YXDOMAIN' }
+        except dns.resolver.NoAnswer:
+            response = { 'status': 'NOANSWER' }
+        except dns.resolver.LifetimeTimeout:
+            response = { 'status': 'TIMEOUT' }
+        except Exception as err: 
+            raise err
+
+        return response    
+    
+    
     def dns_query(self, query:str ='', qtype:str ='A', nameserver:str=None):
         '''
         Perform a DNS query
@@ -469,7 +538,6 @@ def main():
         with open(args.bulk, 'r') as infile:
             for line in infile:
                 domains.append(line.rstrip())
-            print(f'Read: {domains}')
             if domains:
                 lame.bulk_lame_check(domains=domains)
                 lame.bulk_report(args.out)
