@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -205,12 +205,13 @@ class LAME():
         for ns in self.ns_from_parent:
             results.append(self.lame_server_check(zone=zone, server=ns))
         
-        if self.ns_from_parent != self.auth_ns:
-            # Check auth list
-            to_check = self.ns_from_parent.symmetric_difference(self.auth_ns)
-            if to_check:
-                for ns in to_check:
-                    results.append(self.lame_server_check(zone=zone, server=ns))
+        if self.auth_ns:
+            if self.ns_from_parent != self.auth_ns:
+                # Check auth list
+                to_check = self.ns_from_parent.symmetric_difference(self.auth_ns)
+                if to_check:
+                    for ns in to_check:
+                        results.append(self.lame_server_check(zone=zone, server=ns))
                     
         self.results = results
 
