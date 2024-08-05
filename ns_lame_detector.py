@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -154,7 +154,7 @@ class LAME():
 
         if self.results:
             for result in self.results:
-                if result.get('status') == 'LAME':
+                if result.get('status') == 'LAME DELEGATION':
                     lame = True
                 elif 'UNKNOWN' in result.get('status'):
                     unknown = True
