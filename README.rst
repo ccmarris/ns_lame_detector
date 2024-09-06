@@ -2,7 +2,7 @@
 DNS Lame Delegation Detector
 ============================
 
-| Version: 0.2.0
+| Version: 0.2.2
 | Author: Chris Marrison
 | Email: chris@infoblox.com
 
@@ -107,6 +107,11 @@ available::
     -h, --help            show this help message and exit
     -z ZONE, --zone ZONE  Zone to perform checks against
     -d, --debug           Enable debug messages
+
+
+Note::
+  
+  Please note that the script requires direct DNS access to the internet i.e. Port 53 UDP/TCP.
 
 
 Examples
