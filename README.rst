@@ -109,6 +109,11 @@ available::
     -d, --debug           Enable debug messages
 
 
+Note::
+  
+  Please note that the script requires direct DNS access to the internet i.e. Port 53 UDP/TCP.
+
+
 Examples
 --------
 
