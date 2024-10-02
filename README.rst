@@ -2,7 +2,7 @@
 DNS Lame Delegation Detector
 ============================
 
-| Version: 0.2.0
+| Version: 0.2.2
 | Author: Chris Marrison
 | Email: chris@infoblox.com
 

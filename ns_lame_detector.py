@@ -151,6 +151,7 @@ class LAME():
         '''
         lame:bool = False
         unknown:bool = False
+        print_report:bool = True
 
         if self.results:
             for result in self.results:
@@ -158,29 +159,35 @@ class LAME():
                     lame = True
                 elif 'UNKNOWN' in result.get('status'):
                     unknown = True
+                elif result.get('status') == 'TIMEOUT':
+                    unknown = True 
 
-        print()
-        print(f'Results for the domain: {self.results[0].get('zone')}')
-        print()
-        if lame:
-            print('LAME DELEGATIONS DETECTED')
-            print('You may be a Sitting Duck:')
-            print('https://blogs.infoblox.com/threat-intelligence/who-knew-domain-hijacking-is-so-easy/')
             print()
-        if unknown:
-            print('Could not determine status of all servers')
-            print('You may wish to test again')
+            print(f'Results for the domain: {self.results[0].get('zone')}')
             print()
-        
-        if not lame and not unknown:
-            print('Fantastic: No lame servers detected!')
+            if lame:
+                print('LAME DELEGATIONS DETECTED')
+                print('You may be a Sitting Duck:')
+                print('https://blogs.infoblox.com/threat-intelligence/who-knew-domain-hijacking-is-so-easy/')
+                print()
+            if unknown:
+                print('Could not determine status of all servers')
+                print('You may wish to test again')
+                print()
+            
+            if not lame and not unknown:
+                print('Fantastic: No lame servers detected!')
+                print()
+            
+            print('Nameserver:  Status')
+            for r in self.results:
+                print(f"{r.get('nameserver')}: {r.get('status')}")
+            
             print()
-        
-        print('Nameserver:  Status')
-        for r in self.results:
-            print(f"{r.get('nameserver')}: {r.get('status')}")
-        
-        print()
+        else:
+            print('Failed to perform DNS queries for zone, please check you')
+            print('have direct DNS (port 53) access to the internet.')
+            print()
 
         return
 
