@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.3'
+__version__ = '0.2.4'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -431,6 +431,8 @@ class LAME():
             response = { 'status': 'NOANSWER' }
         except dns.resolver.LifetimeTimeout:
             response = { 'status': 'TIMEOUT' }
+        except dns.resolver.NoResolverConfiguration:
+            raise OSError('No DNS resolver configuration found.')
         except Exception as err: 
             raise err
 

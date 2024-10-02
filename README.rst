@@ -2,7 +2,7 @@
 DNS Lame Delegation Detector
 ============================
 
-| Version: 0.2.2
+| Version: 0.2.4
 | Author: Chris Marrison
 | Email: chris@infoblox.com
 
@@ -169,5 +169,7 @@ Thanks to Infoblox Threat Intel for their amazing work on Sitting Duck.
 Thanks to John Steele for letting me sanity check my process.
 Thanks for Henrik Kentsson for asking about a script to test for lame
 delegations.
+Thanks to Steve Makousky for testing and making me improve exception handling
+for missing resolvers and when direct internet access to DNS is blocked.
 
 
