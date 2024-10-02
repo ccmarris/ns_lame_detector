@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -151,7 +151,6 @@ class LAME():
         '''
         lame:bool = False
         unknown:bool = False
-        print_report:bool = True
 
         if self.results:
             for result in self.results:
