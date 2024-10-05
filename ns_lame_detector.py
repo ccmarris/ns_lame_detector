@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.4'
+__version__ = '0.2.5'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -162,7 +162,7 @@ class LAME():
                     unknown = True 
 
             print()
-            print(f'Results for the domain: {self.results[0].get('zone')}')
+            print(f"Results for the domain: {self.results[0].get('zone')}")
             print()
             if lame:
                 print('LAME DELEGATIONS DETECTED')
