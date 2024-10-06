@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.5'
+__version__ = '0.2.6'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -245,16 +245,19 @@ class LAME():
 
         if qr.get('status') == 'NOERROR':
             # Check flags
-            if 'AA' in qr.get('flags'):
-                status = 'AUTHORITATIVE'
+            if qr.get('flags'):
+                if 'AA' in qr.get('flags'):
+                    status = 'AUTHORITATIVE'
 
-                # Add nameserver to set
-                if qr.get('rrset'):
-                        self.auth_ns.update(sorted(qr.get('rrset')))
-                        
-
+                    # Add nameserver to set
+                    if qr.get('rrset'):
+                            self.auth_ns.update(sorted(qr.get('rrset')))
+                            
+                else:
+                    status = 'LAME DELEGATION'
             else:
-                status = 'LAME DELEGATION'
+                status = 'UNKNOWN RESPONSE'
+
         elif qr.get('status') == 'TIMEOUT':
             status = 'UNKNOWN, NO RESPONSE'
         else:
