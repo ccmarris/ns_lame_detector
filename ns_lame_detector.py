@@ -256,7 +256,7 @@ class LAME():
                 else:
                     status = 'LAME DELEGATION'
             else:
-                status = 'UNKNOWN RESPONSE'
+                status = 'LAME DELEGATION'
 
         elif qr.get('status') == 'TIMEOUT':
             status = 'UNKNOWN, NO RESPONSE'
