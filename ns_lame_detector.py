@@ -50,7 +50,7 @@
 ----------------------------------------------------------------------
 """
 
-__version__ = '0.2.6'
+__version__ = '0.3.0'
 __author__ = 'Chris Marrison'
 
 import logging
@@ -62,6 +62,7 @@ import dns.message
 import dns.query
 import dns.resolver
 import dns.rcode
+import dns.flags
 
 _logger = logging.getLogger(__name__)
 ### Global Variables ###
@@ -245,16 +246,14 @@ class LAME():
 
         if qr.get('status') == 'NOERROR':
             # Check flags
-            if qr.get('flags'):
-                if 'AA' in qr.get('flags'):
-                    status = 'AUTHORITATIVE'
+            # if 'AA' in qr.get('flags'):
+            if dns.flags.AA in qr.get('flags'):
+                status = 'AUTHORITATIVE'
 
-                    # Add nameserver to set
-                    if qr.get('rrset'):
-                            self.auth_ns.update(sorted(qr.get('rrset')))
-                            
-                else:
-                    status = 'LAME DELEGATION'
+                # Add nameserver to set
+                if qr.get('rrset'):
+                        self.auth_ns.update(sorted(qr.get('rrset')))
+                        
             else:
                 status = 'LAME DELEGATION'
 
@@ -329,7 +328,7 @@ class LAME():
             dict: { 'status': dns.rcode.to_text(answers.response.rcode()),
                     'rdtype': qtype,
                     'rrset': rrset,
-                    'flags': answers.response.flags.name,
+                    'flags': answers.response.flags,
                     'authority': authority }
             
         '''
@@ -361,7 +360,7 @@ class LAME():
             response = { 'status': dns.rcode.to_text(res.rcode()),
                             'rdtype': qtype,
                             'rrset': rrset,
-                            'flags': res.flags.name,
+                            'flags': res.flags,
                             'authority': authority }
 
         except dns.resolver.NXDOMAIN:
@@ -391,7 +390,7 @@ class LAME():
             dict: { 'status': dns.rcode.to_text(answers.response.rcode()),
                     'rdtype': qtype,
                     'rrset': rrset,
-                    'flags': answers.response.flags.name,
+                    'flags': answers.response.flags,
                     'authority': authority }
             
         '''
@@ -423,7 +422,7 @@ class LAME():
             response = { 'status': dns.rcode.to_text(answers.response.rcode()),
                          'rdtype': qtype,
                          'rrset': rrset,
-                         'flags': answers.response.flags.name,
+                         'flags': answers.response.flags,
                          'authority': authority }
 
         except dns.resolver.NXDOMAIN:
